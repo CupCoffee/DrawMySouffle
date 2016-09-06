@@ -1,12 +1,14 @@
 export default class Pencil {
-	constructor(gfx)
+	/**
+	 * @var gfx {CanvasContext2d}
+	 */
+
+	constructor(canvasContext)
 	{
-		this.gfx = gfx;
-		
+		this.gfx = canvasContext;
+
 		this.gfx.lineCap = 'round';
 		this.gfx.lineJoin = 'round';
-		this.gfx.lineWidth = '10px';
-		this.gfx.lineColor = 'black';
 
 		this.linePoints = [];
 
@@ -21,47 +23,65 @@ export default class Pencil {
 	startDrawing(x, y)
 	{
 		this._isDrawing = true;
-		this.linePoints.push({
-			x: x,
-			y: y
-		});
+
+		this.addLinePoint(x, y);
 	}
 
 	draw(x, y)
 	{
 		if (!this.isDrawing()) return;
 
-		this.line.clear();
-		this.line.lineStyle(10, 0xFF00FF, 1);
-		this.line.moveTo(x, y);
-		this.linePoints.push(new PIXI.Point(x, y));
+		this.gfx.clearRect(0, 0, this.gfx.canvas.width, this.gfx.canvas.height);
+		this.addLinePoint(x, y);
 
-		var p1 = this.linePoints[0];
-		var p2 = this.linePoints[1];
+		this.gfx.beginPath();
+		this.gfx.moveTo(this.linePoints[0].x, this.linePoints[0].y);
 
-		for (var i = 1, len = this.linePoints.length; i < len; i++) {
-			var midPoint = {
-				x: p1.x + (p1.x - p2.x) / 2,
-				y: p1.y + (p1.y - p2.y) / 2
+		let p1 = this.linePoints[0];
+		let p2 = this.linePoints[1];
+
+		for (let i = 1, len = this.linePoints.length; i < len; i++) {
+			let midPoint = {
+				x: p1.x + (p2.x - p1.x) / 2,
+				y: p1.y + (p2.y - p1.y) / 2
 			};
 
-			this.line.quadraticCurveTo(p1.x, p1.y, midPoint.x, midPoint.y);
+			this.gfx.quadraticCurveTo(p1.x, p1.y, midPoint.x, midPoint.y);
 			p1 = this.linePoints[i];
 			p2 = this.linePoints[i+1];
 		}
 
-		this.line.lineTo(p1.x, p1.y);
-		this.line.endFill();
+		this.gfx.lineTo(p1.x, p1.y);
+
+		this.gfx.stroke();
 	}
 
 	stopDrawing(x, y)
 	{
-		this.linePoints = [];
+		this.clearLinePoints();
 		this._isDrawing = false;
 	}
 
-	getLine()
+	addLinePoint(x, y)
 	{
-		return this.line;
+		this.linePoints.push({
+			x: x,
+			y: y
+		});
+	}
+
+	clearLinePoints()
+	{
+		this.linePoints = [];
+	}
+
+	setColor(color)
+	{
+		this.gfx.strokeStyle = color.toString();
+	}
+
+	setSize(size)
+	{
+		this.gfx.lineWidth = size;
 	}
 }

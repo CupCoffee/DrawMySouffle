@@ -6,6 +6,7 @@
 <style lang="sass">
 	body {
 		margin: 0;
+		overflow: hidden;
 	}
 </style>
 <script>
