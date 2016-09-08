@@ -3,7 +3,7 @@ export default class Pencil {
 	 * @var gfx {CanvasContext2d}
 	 */
 
-	constructor(canvasContext)
+	constructor(canvasContext, x, y)
 	{
 		this.gfx = canvasContext;
 
@@ -11,6 +11,8 @@ export default class Pencil {
 		this.gfx.lineJoin = 'round';
 
 		this.linePoints = [];
+
+		this.position = new THREE.Vector2(x, y);
 
 		this._isDrawing = false;
 	}
@@ -29,6 +31,8 @@ export default class Pencil {
 
 	draw(x, y)
 	{
+		this.position.set(x, y);
+
 		if (!this.isDrawing()) return;
 
 		this.gfx.clearRect(0, 0, this.gfx.canvas.width, this.gfx.canvas.height);
