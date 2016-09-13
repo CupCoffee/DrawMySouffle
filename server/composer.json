@@ -1,0 +1,11 @@
+{
+    "require": {
+        "cboden/ratchet": "^0.3.5",
+        "phpunit/phpunit": "^5.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "DrawMySouffle\\": "src"
+        }
+    }
+}
