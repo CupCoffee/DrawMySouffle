@@ -10,18 +10,25 @@
 	}
 </style>
 <script>
+	import { getSocket } from "../vuex/getters";
+	import { setSocket } from "../vuex/actions";
+	import store from "../vuex/store";
+
+	import Wampy from "wampy";
+
 	export default {
-		data: function() {
-			return {
+		store,
 
-			}
+		ready() {
+			this.setSocket(new Wampy('ws://localhost:8080/game', {
+				realm: 'game'
+			}));
 		},
 
-		methods: {
-			click: function() {
-				console.log("CLICK");
-			}
-
-		},
+		vuex: {
+			actions: {
+				setSocket
+			},
+		}
 	}
 </script>

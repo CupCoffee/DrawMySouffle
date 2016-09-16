@@ -13,7 +13,7 @@ let router = new VueRouter({
 });
 
 router.map({
-	'/:gameId': {
+	'/:roomId': {
 		component: GameViewComponent
 	}
 });

@@ -1,6 +1,11 @@
 var path = require('path');
 
 module.exports = {
+	node: {
+		net: "empty",
+		tls: "empty",
+		fs: "empty"
+	},
 	entry: path.resolve(__dirname, 'src/app.js'),
 	output: {
 		path: path.resolve(__dirname, 'build'),
