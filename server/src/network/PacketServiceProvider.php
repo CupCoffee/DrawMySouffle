@@ -19,7 +19,6 @@ class PacketServiceProvider extends AbstractServiceProvider
 	 */
 	public function register()
 	{
-		$this->getContainer()->add('DrawMySouffle\Network\PacketRouter')
-			->withArgument('Psr\Log\LoggerInterface');
+		$this->getContainer()->add('DrawMySouffle\Network\PacketRouter', new PacketRouter($this->getContainer()->get('Psr\Log\LoggerInterface')), true);
 	}
 }
