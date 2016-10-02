@@ -1,0 +1,7 @@
+@import "palette";
+
+$color-primary: $color3;
+$color-primary-dark: darken($color-primary, 5%);
+
+$color-success: $color5;
+$color-success-dark: darken($color-success, 5%);

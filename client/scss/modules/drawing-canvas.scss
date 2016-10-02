@@ -1,0 +1,17 @@
+.drawing-canvas {
+	background-image: url('/assets/paper.png');
+	position: absolute;
+	width: 100vw;
+	height: 100vh;
+
+	&__canvas {
+		position: absolute;
+		z-index: 0;
+	}
+
+	&__toolbox {
+		position: relative;
+		z-index: 1;
+	}
+}
+

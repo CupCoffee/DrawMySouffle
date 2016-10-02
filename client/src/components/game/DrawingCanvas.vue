@@ -1,21 +1,12 @@
 <template>
-<canvas class="drawing-canvas" :width="width" :height="height" v-el:canvas></canvas>
-<canvas class="drawing-canvas" :width="width" :height="height" v-el:pencilcanvas @mousedown="onMouseDown" @mousemove="onMouseMove" @mouseup="onMouseUp" @blur="onMouseUp"></canvas>
+	<div class="drawing-canvas">
+		<canvas class="drawing-canvas__canvas" :width="width" :height="height" v-el:canvas></canvas>
+		<canvas class="drawing-canvas__canvas" :width="width" :height="height" v-el:pencilcanvas @mousedown="onMouseDown" @mousemove="onMouseMove" @mouseup="onMouseUp" @blur="onMouseUp"></canvas>
 
-<colorpicker class="toolbox" @color-pick="setCurrentColor"></colorpicker>
-<sizepicker class="toolbox" @size-pick="setCurrentSize"></sizepicker>
+		<colorpicker class="drawing-canvas__toolbox" @color-pick="setCurrentColor"></colorpicker>
+		<sizepicker class="drawing-canvas__toolbox" @size-pick="setCurrentSize"></sizepicker>
+	</div>
 </template>
-<style>
-.drawing-canvas {
-	position: absolute;
-	z-index: 0;
-}
-
-.toolbox {
-	position: relative;
-	z-index: 1;
-}
-</style>
 <script>
 import ColorpickerComponent from "./Colorpicker.vue";
 import SizepickerComponent from "./Sizepicker.vue";

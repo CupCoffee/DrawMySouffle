@@ -1,34 +1,58 @@
+import Color from "../util/Color";
+
 export default class Pencil {
 	/**
 	 * @var gfx {CanvasContext2d}
 	 */
 
-	constructor(canvasContext)
-	{
+	constructor(canvasContext) {
 		this.gfx = canvasContext;
 
 		this.gfx.lineCap = 'round';
 		this.gfx.lineJoin = 'round';
+		this.setSize(20);
 
 		this.linePoints = [];
+
+		this.patternImage = new Image();
+		this.patternImage.src = '/assets/paper.png';
+		this.patternImage.onload = function () {
+			this.setColor('#000000');
+		}.bind(this);
+
+		this.colorFilterCanvas = document.createElement("canvas");
 
 		this._isDrawing = false;
 	}
 
-	isDrawing()
-	{
+	_filterImageColor(image, color) {
+		this.colorFilterCanvas.width = image.width;
+		this.colorFilterCanvas.height = image.height;
+
+		let colorFilterContext = this.colorFilterCanvas.getContext('2d');
+		colorFilterContext.globalCompositeOperation = 'overlay';
+		colorFilterContext.clearRect(0, 0, image.width, image.height);
+		colorFilterContext.drawImage(image, 0, 0);
+
+		let rgb = Color.hexToRgb(color);
+
+		// colorFilterContext.fillStyle = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.7)`;
+		colorFilterContext.fillStyle = color;
+		colorFilterContext.fillRect(0, 0, image.width, image.height);
+		return colorFilterContext.getImageData(0, 0, image.width, image.height);
+	}
+
+	isDrawing() {
 		return this._isDrawing;
 	}
 
-	startDrawing(x, y)
-	{
+	startDrawing(x, y) {
 		this._isDrawing = true;
 
 		this.addLinePoint(x, y);
 	}
 
-	draw(x, y)
-	{
+	draw(x, y) {
 		if (!this.isDrawing()) return;
 
 		this.gfx.clearRect(0, 0, this.gfx.canvas.width, this.gfx.canvas.height);
@@ -48,7 +72,7 @@ export default class Pencil {
 
 			this.gfx.quadraticCurveTo(p1.x, p1.y, midPoint.x, midPoint.y);
 			p1 = this.linePoints[i];
-			p2 = this.linePoints[i+1];
+			p2 = this.linePoints[i + 1];
 		}
 
 		this.gfx.lineTo(p1.x, p1.y);
@@ -56,32 +80,29 @@ export default class Pencil {
 		this.gfx.stroke();
 	}
 
-	stopDrawing(x, y)
-	{
+	stopDrawing(x, y) {
 		this.clearLinePoints();
 		this._isDrawing = false;
 	}
 
-	addLinePoint(x, y)
-	{
+	addLinePoint(x, y) {
 		this.linePoints.push({
 			x: x,
 			y: y
 		});
 	}
 
-	clearLinePoints()
-	{
+	clearLinePoints() {
 		this.linePoints = [];
 	}
 
-	setColor(color)
-	{
-		this.gfx.strokeStyle = color.toString();
+	setColor(color) {
+		createImageBitmap(this._filterImageColor(this.patternImage, color)).then(function(image) {
+			this.gfx.strokeStyle = this.gfx.createPattern(image, 'repeat');
+		}.bind(this))
 	}
 
-	setSize(size)
-	{
+	setSize(size) {
 		this.gfx.lineWidth = size;
 	}
 }

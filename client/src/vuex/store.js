@@ -15,9 +15,5 @@ export default new Store({
 		SET_ROOM_ID(state, roomId) {
 			state.roomId = roomId;
 		},
-
-		SET_SOCKET(state, socket) {
-			state.socket = socket;
-		}
 	}
 });

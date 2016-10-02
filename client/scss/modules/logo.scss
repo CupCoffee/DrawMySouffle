@@ -1,0 +1,18 @@
+.logo {
+	color: $white;
+	@include font-primary;
+	font-size: 5em;
+	text-shadow: 2px 2px 1px $black;
+
+	&__part {
+		display: inline-block;
+
+		&:nth-child(odd) {
+			transform: rotate(10deg);
+		}
+
+		&:nth-child(even) {
+			transform: rotate(-10deg);
+		}
+	}
+}
