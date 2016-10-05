@@ -3,18 +3,26 @@ import _ from "underscore";
 export default class Socket {
 	static connect()
 	{
-		this._isConnected = false;
+		if (!this.isConnecting() && !this.isConnected()) {
+			this._isConnected = false;
 
-		this.on(this.OPEN).then(function () {
-			this._isConnected = true;
-		}.bind(this));
+			this.on(Socket.OPEN).then(function () {
+				this._isConnected = true;
+				this._isConnecting = false;
+			}.bind(this));
 
-		this._socket = new WebSocket("ws://localhost:8080");
+			this.on(Socket.CLOSE).then(function() {
+				this._isConnected = false;
+			}.bind(this));
 
-		this._socket.onopen = this._handleEvent.bind(this);
-		this._socket.onmessage = this._handleEvent.bind(this);
-		this._socket.onerror = this._handleEvent.bind(this);
-		this._socket.onclose = this._handleEvent.bind(this);
+			this._socket = new WebSocket("ws://localhost:8080");
+			this._isConnecting = true;
+
+			this._socket.onopen = this._handleEvent.bind(this);
+			this._socket.onmessage = this._handleEvent.bind(this);
+			this._socket.onerror = this._handleEvent.bind(this);
+			this._socket.onclose = this._handleEvent.bind(this);
+		}
 	}
 
 	/**
@@ -51,6 +59,7 @@ export default class Socket {
 
 	static _handleEvent(event)
 	{
+		console.log("Handling socket event:", event);
 		// FIXME: this is duplicate code
 		if (!this._listeners) {
 			this._listeners = {};
@@ -61,6 +70,11 @@ export default class Socket {
 				resolve(event);
 			});
 		}
+	}
+
+	static isConnecting()
+	{
+		return this._isConnecting && !this.isConnected();
 	}
 
 	static isConnected()
@@ -83,6 +97,8 @@ export default class Socket {
 
 	static on(eventType)
 	{
+		console.log("Registering socket event:", eventType);
+
 		// FIXME: this is duplicate code
 		if (!this._listeners) {
 			this._listeners = {};
